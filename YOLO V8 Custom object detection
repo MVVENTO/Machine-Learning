@@ -1,5 +1,7 @@
 # sample code 
 # https://github.com/niconielsen32/NeuralNetworks/blob/main/YOLOv8CustomObjectDetection.ipynb
+# Original owner : https://github.com/niconielsen32
+# code has been modifyed to include my own Custom dataset from Roboflow 
 
 !nvidia-smi
 !pip install ultralytics
