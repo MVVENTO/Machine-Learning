@@ -4,6 +4,7 @@
 # code has been modifyed to include my own Custom dataset from Roboflow 
 
 # Resources https://github.com/Kulbear/deep-learning-coursera
+# https://www.coursera.org/specializations/deep-learning?action=enroll
 
 !nvidia-smi
 !pip install ultralytics
