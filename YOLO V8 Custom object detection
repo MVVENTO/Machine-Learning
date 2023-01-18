@@ -3,6 +3,8 @@
 # Original owner : https://github.com/niconielsen32
 # code has been modifyed to include my own Custom dataset from Roboflow 
 
+# Resources https://github.com/Kulbear/deep-learning-coursera
+
 !nvidia-smi
 !pip install ultralytics
 
