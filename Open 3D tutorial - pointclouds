@@ -250,13 +250,71 @@ ax = plt.axes(projection='3d')
 ax.scatter(decimated_points[:,0], decimated_points[:,1], decimated_points[:,2], c = decimated_colors/65535, s=0.01)
 plt.show()
 
-               
-               
-                                  
-                     
-                                  
+# Other Examples using test data
 
- 
+# Load data
+import open3d as o3 
+
+print("Convert mesh to a point cloud and estimate dimensions")
+armadillo = o3d.data.ArmadilloMesh()
+mesh = o3d.io.read_triangle_mesh(armadillo.path)
+mesh.compute_vertex_normals()
+
+pcd = mesh.sample_points_poisson_disk(5000)
+diameter = np.linalg.norm(
+    np.asarray(pcd.get_max_bound()) - np.asarray(pcd.get_min_bound()))
+o3d.visualization.draw_geometries([pcd])
+               
+# Point Cloud Data Segmentation C++
+# https://www.youtube.com/watch?v=17zf9e5ZK3I
+
+#object detection lidar
+#https://yagmurcigdemaktas.medium.com/object-detection-using-lidar-329ffd3deb16                            
+# https://alteia.com/resources/blog/point-cloud-classification-and-machine-learning/
+# https://paperswithcode.com/task/3d-point-cloud-classification
+# https://info.vercator.com/blog/feature-extraction-from-point-cloud-data
+# https://graphics.stanford.edu/courses/cs164-10-spring/Handouts/papers_gumhold.pdf
+# https://github.com/agarret7/PointCNN/blob/master/core/model.py
+# https://paperswithcode.com/paper/pointnet-deep-hierarchical-feature-learning#code
+# https://developers.arcgis.com/python/guide/point-cloud-segmentation-using-pointcnn/
+# https://towardsdatascience.com/a-gis-pipeline-for-lidar-point-cloud-feature-extraction-8cd1c686468a
+# http://www.open3d.org/docs/latest/python_api/open3d.geometry.OrientedBoundingBox.html
+# https://alteia.com/resources/blog/point-cloud-classification-and-machine-learning/
+# https://github.com/hxdengBerkeley/PointCNN.Pytorch
+# https://github.com/nicolas-chaulet/torch-points3d
+# https://github.com/agarret7/PointCNN/blob/master/core/model.py
+# http://jacoposerafin.com/wp-content/uploads/serafin16iros.pd
+# https://learngeodata.eu/2021/05/14/learn-3d-point-cloud-segmentation-with-python/
+# https://github.com/niconielsen32/NeuralNetworks/blob/main/PointCloudPointNet.ipynb
+
+# youtube tutorials / videos
+# https://www.youtube.com/watch?v=vGr8Bg2Fda8&t=204s
+# https://www.youtube.com/watch?v=_oFTKDwsbQ0&t=662s
+# https://www.youtube.com/watch?v=6mivXP3rAfg&t=192s
+# https://www.youtube.com/watch?v=GGxpqfTvE8c&t=2s
+# https://www.youtube.com/watch?v=zF3MreN1w6c&list=PLkmvobsnE0GEZugH1Di2Cr_f32qYkv7aN
+# https://www.youtube.com/watch?v=2bVdvgzYLeQ&t=226s
+# https://www.youtube.com/watch?v=xFFCQVwYeec&t=2140s
+# https://www.youtube.com/watch?v=zF3MreN1w6c&list=PLkmvobsnE0GEZugH1Di2Cr_f32qYkv7aN
+# https://www.youtube.com/watch?v=29ZQ3TDGgRQ
+
+# How to connect to Microsoft SQL Server in Microsoft Access
+# https://www.youtube.com/watch?v=jZm3KtjG9x8
+                                  
+# resoures from yaan - Columbia university & stanford
+# https://docs.google.com/document/d/1J-s-RZ8emghv0GKZa75APMiqDCPBRFBJDZuuRG31wTc/edit#
+
+#https://labelstud.io/templates
+#https://github.com/walzimmer/bat-3d
+#https://codesandbox.io/embed/pcl-js-statisticaloutlierremoval-kl2zjs?fontsize=14&hidenavigation=1&theme=dark&codemirror=1
+#https://labelstud.io/templates/gallery_dynamic_labels.html
+#https://labelstud.io/templates/gallery_cv.html
+#https://labelstud.io/templates
+
+#AI chatbot tools
+#https://console.anthropic.com/login?returnTo=%2Fdashboard
+#https://chat.openai.com/chat
+#chat bing
                                   
 
                                   
