@@ -1,0 +1,218 @@
+
+<!-- 
+    Author                  : Melissa Vento
+     Date                   : 5/10/2023
+     File Name              : Track_XYZ_simulation
+     Resources              : https://developers.arcgis.com/javascript/latest/sample-code/widgets-track/
+                              https://max-coding.medium.com/how-to-process-gtfs-data-using-pandas-geopandas-4b34f2ad3273
+    Documentation Notes     : In order to extract the XYZ coordiantes of the LAS file given to me I had to use the following code :
+
+                              import laspy as lp
+
+                              # Open the LAS file
+                              dataname="Tile (49).las"
+                              point_cloud = lp.read(dataname)
+
+
+
+                              # Extract the XYZ coordinates
+                              x = point_cloud.x
+                              y = point_cloud.y
+                              z = point_cloud.z
+
+
+                              # Save the XYZ coordinates to a text file
+                              with open("XYZ_LAS.txt", "w") as output_file:
+                                for i in range(len(x)):
+                                  output_file.write(f"{x[i]}, {y[i]}, {z[i]}\n")
+
+
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+                              By using the XYZ_LAS(1).txt file and converting the XYZ coordiantes to Long and lat  I was able to map out the Coordinates of the LAS pointcloud file given to me.
+                              I used the following code to convert the XYZ coordinates to Long and Lat Note : lat is long and long is lat.
+
+                                import pyproj
+
+                                # Define the projected CRS based on its EPSG code
+                                crs = pyproj.CRS.from_epsg(2263)
+
+                                # Define the transformer to convert from the projected CRS to WGS84 (EPSG code 4326)
+                                transformer = pyproj.Transformer.from_crs(crs, "epsg:4326")
+
+                                # Define the XYZ coordinates
+                                x, y, z = 1041983.9432965653, 250718.68757290463, -0.467 (edit this portion to each new entry try swapping the first two coordinates for accuracy)
+
+                                # Convert the XYZ coordinates to latitude and longitude
+                                lon, lat, _ = transformer.transform(x, y, z)
+
+                                # Print the resulting latitude and longitude values
+                                print(f"Latitude: {lat:.6f}, Longitude: {lon:.6f}")
+
+
+-->
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Track widget simulation | Sample | ArcGIS Maps SDK for JavaScript 4.26</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+      }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.26/esri/themes/light/main.css" />
+
+    <script>
+      var dojoConfig = {
+        packages: [
+          {
+            name: "geolocate",
+            location: "//2gis.github.io/mock-geolocation/dist",
+            main: "geolocate"
+          }
+        ]
+      };
+    </script>
+
+    <script src="https://js.arcgis.com/4.26/"></script>
+
+    <script>
+      require([
+        "geolocate", // geolocation simulator (https://github.com/2gis/mock-geolocation)
+        "esri/widgets/Track",
+        "esri/views/SceneView",
+        "esri/Map"
+      ], (geolocate, Track, SceneView, Map) => {
+        // geolocation simulator
+        stubGeolocation();
+
+        const map = new Map({
+          basemap: "topo-vector"
+        });
+
+        const view = new SceneView({
+          map: map,
+          container: "viewDiv",
+          center: [ -73.791301,40.854650],
+          zoom: 18,
+          ui: {
+            components: ["attribution"] // replace default set of UI components
+          }
+        });
+
+        const track = new Track({
+          view: view,
+          goToLocationEnabled: false // disable this since we want to control what happens after our location is acquired
+        });
+        view.ui.add(track, "top-left");
+
+        view.when(() => {
+          let prevLocation = view.center;
+
+          track.on("track", () => {
+            const location = track.graphic.geometry;
+
+            view.goTo({
+              center: location,
+              tilt: 50,
+              scale: 2500,
+              heading: 360 - getHeading(location, prevLocation),  // only applies to SceneView
+              rotation: 360 - getHeading(location, prevLocation) // only applies to MapView
+            }).catch((error) => {
+              if (error.name != "AbortError"){
+                console.error(error);
+              }
+            });
+
+            prevLocation = location.clone();
+          });
+
+          track.start();
+        });
+
+        function getHeading(point, oldPoint) {
+          // get angle between two points
+          const angleInDegrees = (Math.atan2(point.y - oldPoint.y, point.x - oldPoint.x) * 180) / Math.PI;
+
+          // move heading north
+          return -90 + angleInDegrees;
+        }
+
+        // geolocation simulator
+        function stubGeolocation() {
+          let coords = [
+          {
+                lat: 40.854650,
+                lng: -73.791301
+             },
+            {
+                lat: 40.854650,
+                lng: -73.791273  
+            },
+            {
+                lat: 40.854656,
+                lng: -73.791281
+              
+            },
+            {
+                lat: 40.854657,
+                lng: -73.791280
+              
+            },
+                       {
+                lat: 40.854655,
+                lng: -73.791280
+              
+            },
+            {
+                lat: 40.854642,
+                lng: -73.791269
+              
+            },
+        
+                       {
+                lat: 40.855857,
+                lng: -73.791089
+              
+            },
+            {
+                lat: 40.855855,
+                lng: -73.791077
+              
+            },
+        
+                       {
+                lat: 40.855851,
+                lng: -73.791158
+              
+            },
+            {
+                lat: 40.855859,
+                lng: -73.791158
+              
+            }
+            ],
+            currentCoordIndex = 0;
+
+          geolocate.use();
+
+          setInterval(() => {
+            geolocate.change(coords[currentCoordIndex]);
+            currentCoordIndex = (currentCoordIndex + 1) % coords.length;
+          }, 1500);
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
